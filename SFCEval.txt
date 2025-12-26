@@ -1,0 +1,87 @@
+SFCEval – Evaluation Report
+Evaluation Date: [27/06/2025]
+Application ID: Blog2_4
+Application Description: Blog of a ML engineer
+Model: Gemini 2.5 Pro
+Prompt Specificity: mid
+
+Task Evaluation Details
+Each section shows the calculated value for the specific task, following the formulas defined by the SFCEval system.
+
+1. Correctness of backend imports (Weight: 0.5)
+Number of correct imports: 34
+
+Total number of imports: 34
+
+Import_value = (34 * 0.5) / 34
+
+Task Value (Backend Imports): 0.5
+
+2. Correctness of frontend imports (Weight: 0.5)
+Number of correct imports: 90
+
+Total number of imports: 94
+
+Import_value = (90 * 0.5) / 94
+
+Task Value (Frontend Imports): 0.48
+
+3. Correctness of frontend-backend communication (Weight: 2)
+Sub-task: Coverage (Internal Weight: 1)
+
+Number of endpoints covered by the frontend: 11
+
+Total number of endpoints in the backend: 15
+
+Coverage_value = (11 * 1) / 15
+
+Coverage Value: 0.73
+
+Sub-task: Robustness (Internal Weight: 1)
+
+Number of endpoints with error handling: 15
+
+Total number of endpoints in the backend: 15
+
+Robustness_value = (15 * 1) / 15
+
+Robustness Value: 1
+
+Task Value (Frontend-Backend Comm.): 1.73
+
+4. Correct installation of dependencies (Weight: 1)
+Dependencies Installed Correctly (1 for Yes, 0 for No): 1
+
+Install_value = 1 (if Dependencies Installed Correctly) or 0 (if Dependencies Not Installed Correctly)
+
+Task Value (Dependency Installation): 1
+
+5. Functional evaluation (Weight: 2.5)
+Number of correct functional requirements: 10
+
+Total number of functional requirements: 14
+
+FunctionalEvaluation_value = (2.5 * 10) / 14
+
+Task Value (Functional Evaluation): 1.79
+
+6. Presence of syntax errors (Weight: 1.5)
+Number of files without syntax errors: 45
+
+Total number of files: 46
+
+Syntax_value = (45 * 1.5) / 46
+
+Task Value (Syntax Errors): 1.47
+
+7. Correct database creation (Weight: 2)
+Number of database errors (constant c=10): 0
+
+DatabaseCorrectness_value = (2 * (10 - 0)) / 10
+
+Task Value (Database Creation): 2
+
+Overall SFCEval Score
+Sum of all task values: 8.97 --> 0.897
+
+Additional Notes: The failure to produce the manipulation of articles and projects was observed, even though it was not explicitly required in the prompt
