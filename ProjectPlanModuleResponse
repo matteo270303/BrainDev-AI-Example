@@ -1,0 +1,305 @@
+Of course. Here is a detailed list of files and folders for the **Blog2_4** web application, based on your comprehensive request. The structure is designed for clarity, scalability, and adherence to modern best practices for both Flask and Next.js.
+
+### Root Project Structure
+
+This is the top-level directory layout that separates the backend and frontend concerns.
+
+```
+Blog2_4/
+├── backend/              # Flask REST API
+├── frontend/             # Next.js Application
+└── README.md             # Project overview, setup, and deployment instructions
+```
+
+---
+
+## 1. Backend (Flask API)
+
+The backend is organized using the application factory pattern and modular blueprints, with a clear separation of concerns into APIs, data models (classes), and utility functions.
+
+```
+backend/
+├── app/
+│   ├── __init__.py         # Application factory (create_app)
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── admin_routes.py   # Endpoints for /api/admin/*
+│   │   ├── auth_routes.py    # Endpoints for /api/auth/*
+│   │   └── public_routes.py  # Endpoints for public content
+│   ├── classes/
+│   │   ├── __init__.py
+│   │   └── models.py         # SQLAlchemy ORM models
+│   ├── functions/
+│   │   ├── __init__.py
+│   │   └── helpers.py        # Utility functions (e.g., slugify, image saving)
+│   ├── extensions.py         # Flask extension instances (db, jwt, cors)
+│   └── uploads/              # Directory for storing user-uploaded images (add to .gitignore)
+├── .env                    # Environment variables (DB connection, secrets)
+├── .flaskenv               # Flask environment settings (FLASK_APP, FLASK_ENV)
+├── config.py               # Configuration classes for the app
+├── requirements.txt        # Python dependencies
+└── run.py                  # Entry point to run the Flask application
+```
+
+### Backend File Descriptions
+
+#### `backend/run.py`
+*   **Description**: The main entry point to start the Flask development server. It imports the application factory `create_app` from the `app` package and runs the application instance.
+*   **Content**:
+    ```python
+    from app import create_app
+    from dotenv import load_dotenv
+
+    load_dotenv() # Load environment variables from .env file
+    app = create_app()
+
+    if __name__ == '__main__':
+        app.run()
+    ```
+
+#### `backend/config.py`
+*   **Description**: Contains configuration classes for different environments (e.g., Development, Production). It fetches sensitive data from environment variables to keep it out of the codebase.
+*   **Content**:
+    ```python
+    import os
+
+    class Config:
+        SECRET_KEY = os.environ.get('SECRET_KEY')
+        JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        UPLOAD_FOLDER = 'app/uploads'
+    ```
+
+#### `backend/.env` (Example - **Do not commit to Git**)
+*   **Description**: Stores all secrets and environment-specific variables.
+*   **Content**:
+    ```
+    SECRET_KEY='a_very_secret_flask_key'
+    JWT_SECRET_KEY='a_super_secret_jwt_key'
+    DATABASE_URI='mysql+mysqlconnector://user:password@host/db_name'
+    ```
+
+#### `backend/.flaskenv`
+*   **Description**: Sets environment variables for the `flask` command-line tool.
+*   **Content**:
+    ```
+    FLASK_APP=run.py
+    FLASK_ENV=development
+    ```
+
+#### `backend/requirements.txt`
+*   **Description**: Lists all Python packages required for the project.
+*   **Content**:
+    ```
+    Flask
+    Flask-SQLAlchemy
+    Flask-JWT-Extended
+    Flask-Cors
+    python-dotenv
+    mysql-connector-python
+    Werkzeug
+    # and other dependencies...
+    ```
+
+#### `backend/app/__init__.py`
+*   **Description**: Implements the **Application Factory** pattern. The `create_app` function initializes the Flask application, configures it, sets up extensions, registers blueprints, and defines global error handlers.
+*   **Content**:
+    *   Define the `create_app()` function.
+    *   Instantiate `Flask(__name__)`.
+    *   Load configuration from `config.py`.
+    *   Initialize extensions (db, jwt, cors) by calling `init_app()` on the instances from `extensions.py`.
+    *   Register the blueprints: `public_bp`, `admin_bp`, `auth_bp`.
+    *   Define custom JSON error handlers for 404, 400, and other common HTTP errors.
+
+#### `backend/app/extensions.py`
+*   **Description**: Instantiates the Flask extensions. This prevents circular import problems when extensions need to be imported in various modules (like models and routes).
+*   **Content**:
+    ```python
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_jwt_extended import JWTManager
+    from flask_cors import CORS
+
+    db = SQLAlchemy()
+    jwt = JWTManager()
+    cors = CORS()
+    ```
+
+---
+
+### `backend/app/api/` - API Routes (Blueprints)
+
+#### `backend/app/api/public_routes.py`
+*   **Description**: Defines the `public_bp` Blueprint for all publicly accessible endpoints. These routes handle fetching data without requiring authentication.
+*   **Functionality**:
+    *   `GET /api/site-content/about-me`: Fetches the 'about_me' content from the `site_content` table.
+    *   `GET /api/projects`: Fetches a paginated list of projects.
+    *   `GET /api/projects/:slug`: Fetches a single project by its slug, including related images and links.
+    *   `GET /api/articles`: Fetches a paginated list of articles.
+    *   `GET /api/articles/:slug`: Fetches a single article by its slug, including its Markdown content and tags.
+    *   `GET /api/tags`: Fetches a list of all unique tags.
+
+#### `backend/app/api/admin_routes.py`
+*   **Description**: Defines the `admin_bp` Blueprint for all administrative endpoints. Every route in this file is protected with the `@jwt_required()` decorator.
+*   **Functionality**:
+    *   `PUT /api/admin/site-content/about-me`: Updates the 'about_me' content.
+    *   `POST /api/admin/projects`: Creates a new project. Handles multipart/form-data for image uploads.
+    *   `PUT /api/admin/projects/:id`: Updates an existing project.
+    *   `DELETE /api/admin/projects/:id`: Deletes a project and its associated files.
+    *   `POST /api/admin/articles`: Creates a new article, handling title, content, and tags.
+    *   `PUT /api/admin/articles/:id`: Updates an existing article.
+    *   `DELETE /api/admin/articles/:id`: Deletes an article.
+    *   `POST /api/admin/upload-image`: Generic endpoint for uploading an image and returning its URL.
+
+#### `backend/app/api/auth_routes.py`
+*   **Description**: Defines the `auth_bp` Blueprint for handling the authentication flow.
+*   **Functionality**:
+    *   `POST /api/auth/login`: Accepts `username` and `password`. Validates credentials against the `users` table. If successful, returns a JWT access token using `create_access_token`.
+
+---
+
+### `backend/app/classes/` - Data Models
+
+#### `backend/app/classes/models.py`
+*   **Description**: Contains all SQLAlchemy ORM class definitions, which map directly to the MySQL database tables. This file is central to data persistence.
+*   **Functionality**:
+    *   Import `db` from `app.extensions`.
+    *   Define the `article_tags` association table for the many-to-many relationship.
+    *   **`User` class**: `id`, `username`, `password_hash`. Includes methods `set_password(password)` and `check_password(password)` using `werkzeug.security`.
+    *   **`Article` class**: Defines columns and a `tags` relationship (`back_populates` to `Tag`).
+    *   **`Project` class**: Defines columns and relationships to `ProjectImage` and `ProjectLink` (`back_populates` and `cascade="all, delete-orphan"`).
+    *   **`ProjectImage` class**: Defines columns and a foreign key to `projects.id`.
+    *   **`ProjectLink` class**: Defines columns and a foreign key to `projects.id`.
+    *   **`Tag` class**: Defines columns and a `articles` relationship.
+    *   **`SiteContent` class**: Defines the key-value store for editable static content.
+
+---
+
+### `backend/app/functions/` - Utility Functions
+
+#### `backend/app/functions/helpers.py`
+*   **Description**: A collection of reusable helper functions used across the backend.
+*   **Functionality**:
+    *   `slugify(text)`: A function to convert a string (like a title) into a URL-friendly slug.
+    *   `save_picture(form_picture)`: A function to handle image uploads, including generating a secure filename, resizing if necessary, and saving it to the `app/uploads` directory. Returns the filename.
+    *   `delete_picture(filename)`: A function to delete an image file from the server.
+    *   Standardized response functions (e.g., `api_success_response`, `api_error_response`) to ensure consistent JSON output.
+
+---
+
+## 2. Frontend (Next.js App)
+
+The frontend uses the latest Next.js App Router structure, which favors server components for static rendering and client components for interactivity.
+
+```
+frontend/
+├── app/
+│   ├── (public)/                 # Route group for public pages
+│   │   ├── about/
+│   │   │   └── page.tsx          # About page
+│   │   ├── articles/
+│   │   │   ├── [slug]/
+│   │   │   │   └── page.tsx      # Single article page
+│   │   │   └── page.tsx          # Articles list page
+│   │   ├── projects/
+│   │   │   ├── [slug]/
+│   │   │   │   └── page.tsx      # Single project page
+│   │   │   └── page.tsx          # Projects list page
+│   │   └── layout.tsx            # Layout for all public pages (Navbar, Footer)
+│   ├── admin/                    # Route group for admin pages
+│   │   ├── articles/
+│   │   │   └── page.tsx          # Manage articles (CRUD)
+│   │   ├── dashboard/
+│   │   │   └── page.tsx          # Admin dashboard
+│   │   ├── login/
+│   │   │   └── page.tsx          # Admin login page
+│   │   ├── projects/
+│   │   │   └── page.tsx          # Manage projects (CRUD)
+│   │   ├── settings/
+│   │   │   └── page.tsx          # Manage 'About Me' content
+│   │   └── layout.tsx            # Layout for admin section (Sidebar, protected route logic)
+│   ├── favicon.ico
+│   ├── globals.css               # Global styles and Tailwind directives
+│   ├── layout.tsx                # Root layout of the application
+│   └── page.tsx                  # Homepage component (/)
+├── components/
+│   ├── admin/
+│   │   ├── AdminSidebar.tsx
+│   │   ├── ImageUploader.tsx
+│   │   └── MarkdownEditor.tsx
+│   ├── public/
+│   │   ├── ArticleCard.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Navbar.tsx
+│   │   └── ProjectCard.tsx
+│   └── shared/
+│       └── MarkdownRenderer.tsx
+├── context/
+│   └── AuthContext.tsx           # React Context for authentication state
+├── lib/
+│   ├── api.ts                    # Centralized API fetching functions
+│   ├── hooks.ts                  # Custom React hooks (e.g., useAuth)
+│   └── types.ts                  # TypeScript type definitions for API data
+├── .env.local                    # Frontend environment variables (e.g., API URL)
+├── next.config.mjs               # Next.js configuration
+├── package.json                  # Project dependencies and scripts
+├── postcss.config.js             # PostCSS configuration for Tailwind
+└── tailwind.config.ts            # Tailwind CSS theme and plugin configuration
+```
+
+### Frontend File Descriptions
+
+#### `frontend/app/layout.tsx` (Root Layout)
+*   **Description**: The main layout for the entire application. It sets up the `<html>` and `<body>` tags and wraps all pages in the `AuthProvider` to make authentication state globally available.
+*   **Content**: Imports `globals.css`, defines root metadata, and wraps `{children}` with the `AuthProvider` from `context/AuthContext.tsx`.
+
+#### `frontend/app/(public)/layout.tsx` (Public Layout)
+*   **Description**: A shared layout for all public-facing pages. It renders the `Navbar` and `Footer` components, creating a consistent frame for the visitor experience.
+*   **Content**: Imports and renders `<Navbar />`, `{children}`, and `<Footer />`.
+
+#### `frontend/app/page.tsx` (Homepage)
+*   **Description**: The main landing page. This is a Server Component that fetches data at build time (or on-demand) for fast performance.
+*   **Functionality**: Fetches a brief bio, a few recent articles, and featured projects from the API and displays them.
+
+#### `frontend/app/articles/[slug]/page.tsx` (Dynamic Article Page)
+*   **Description**: Renders a single article.
+*   **Functionality**:
+    *   **`generateStaticParams`**: Fetches all article slugs from the API at build time to pre-render each page.
+    *   **Page Component**: A Server Component that takes `slug` as a parameter, fetches the full article data for that slug, and renders the content using the `MarkdownRenderer` component.
+
+#### `frontend/app/admin/layout.tsx` (Admin Layout)
+*   **Description**: The layout for the entire admin section. This is a **Client Component** (`'use client'`) because it needs to access the authentication context to protect its child routes.
+*   **Functionality**:
+    *   Uses the `useAuth` hook to check if a user is logged in.
+    *   If not logged in, it redirects the user to `/admin/login`.
+    *   If logged in, it renders a layout with a persistent `AdminSidebar` and the main content area for the specific admin page (`{children}`).
+
+#### `frontend/app/admin/login/page.tsx`
+*   **Description**: A **Client Component** (`'use client'`) that displays a login form.
+*   **Functionality**: Manages form state (username, password), calls the login function from `AuthContext` on submit, and handles success (redirect to dashboard) or error (display message) states.
+
+#### `frontend/components/`
+*   **Description**: This directory holds all reusable React components, organized by their domain (admin, public, shared).
+    *   **`admin/MarkdownEditor.tsx`**: A client component wrapping a library like `react-mde` to provide a rich text editing experience for articles. It will integrate with the `admin/ImageUploader.tsx` component.
+    *   **`public/ArticleCard.tsx`**: A component to display an article's summary (title, excerpt, date, tags).
+    *   **`shared/MarkdownRenderer.tsx`**: A component that safely renders a Markdown string to HTML using a library like `react-markdown`.
+
+#### `frontend/context/AuthContext.tsx`
+*   **Description**: A **Client Component** (`'use client'`) that creates and provides the authentication context.
+*   **Functionality**:
+    *   Manages the JWT state (stores it in memory or `localStorage`).
+    *   Provides `login(username, password)` and `logout()` functions.
+    *   Exposes the authentication status (`isAuthenticated`, `token`) to any component that consumes the context via the `useAuth` hook.
+
+#### `frontend/lib/api.ts`
+*   **Description**: A crucial utility file that centralizes all communication with the Flask backend. Using `axios` or `fetch`.
+*   **Functionality**:
+    *   Exports functions for every API endpoint (e.g., `getArticles()`, `getProjectBySlug(slug)`, `loginAdmin(credentials)`).
+    *   Configures an `axios` instance to automatically include the `Authorization: Bearer <token>` header on requests to protected endpoints if a token is available from the `AuthContext`.
+
+#### `frontend/lib/types.ts`
+*   **Description**: Contains all TypeScript type and interface definitions for the data structures returned by the API (e.g., `Article`, `Project`, `Tag`). This enables type safety across the frontend.
+
+#### `frontend/tailwind.config.ts`
+*   **Description**: Configuration file for Tailwind CSS.
+*   **Content**: Defines the custom color palette (`primary`, `text`, `accent`, etc.) and any other theme customizations or plugins.
