@@ -1,5 +1,8 @@
 # BrainDev AI – Generated Web Application Outputs (Gemini 2.5 Pro)
 
+![Framework Architecture](docs/architecture.png)
+
+
 This repository contains the complete set of artifacts produced during a single **end-to-end web application generation** using **BrainDev AI** with **Gemini 2.5 Pro** as the underlying Large Language Model.
 
 The repository is intended to support **reproducibility, transparency, and qualitative inspection** of the generation pipeline described in the associated research paper. All outputs correspond to the execution of the framework on a real-world prompt and are provided *as-is*, without manual post-editing.
