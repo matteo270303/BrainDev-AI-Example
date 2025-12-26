@@ -1,0 +1,283 @@
+{
+  "tasks": [
+    {
+      "description": "Create the main database for the personal portfolio and blog application. This task involves setting up the database schema with the appropriate character set and collation to support a wide range of text and special characters.",
+      "task_id": "DB-01"
+    },
+    {
+      "description": "Create the 'users' table to store administrator credentials. This table will hold login information, with passwords securely hashed. While designed for a single administrator, the structure supports multiple users.",
+      "task_id": "DB-02"
+    },
+    {
+      "description": "Create the 'articles' table to store blog post content. This table includes fields for the title, a URL-friendly slug, a brief excerpt, the full content in Markdown format, and timestamps for creation and updates.",
+      "task_id": "DB-03"
+    },
+    {
+      "description": "Create the 'tags' table to store unique tags that can be assigned to articles. This centralized table prevents tag duplication and allows for easy querying of all articles associated with a specific tag.",
+      "task_id": "DB-04"
+    },
+    {
+      "description": "Create the 'article_tags' pivot table to manage the many-to-many relationship between articles and tags. Each row links an article to a tag.",
+      "task_id": "DB-05"
+    },
+    {
+      "description": "Create the 'projects' table to store information about personal or professional projects. It includes a title, slug for the URL, a detailed description, and timestamps.",
+      "task_id": "DB-06"
+    },
+    {
+      "description": "Create the 'project_images' table. This table stores URLs for images associated with projects, establishing a one-to-many relationship where one project can have multiple images.",
+      "task_id": "DB-07"
+    },
+    {
+      "description": "Create the 'project_links' table. This table stores external URLs related to a project, such as links to a GitHub repository or a live demo. It has a one-to-many relationship with the 'projects' table.",
+      "task_id": "DB-08"
+    },
+    {
+      "description": "Create the 'site_content' table to store editable static content in a key-value format. This allows the administrator to update specific parts of the site, like the 'About Me' page, without code changes.",
+      "task_id": "DB-09"
+    },
+    {
+      "description": "Generate a query to insert an initial administrator user into the 'users' table. This is essential for the site owner to be able to log into the admin panel for the first time. The password must be pre-hashed.",
+      "task_id": "DB-10"
+    },
+    {
+      "description": "Generate a query to populate the 'site_content' table with the initial entry for the 'About Me' page. This ensures the page has default content upon initial setup.",
+      "task_id": "DB-11"
+    }
+  ]
+}
+[Task Backend]
+Task per il backend elaborate
+{
+  "tasks": [
+    {
+      "description": "Create the configuration file `config.py` to manage environment variables and application settings.",
+      "macroArea": "general",
+      "task_id": "1-config-py"
+    },
+    {
+      "description": "Create the `requirements.txt` file listing all Python dependencies required for the backend application.",
+      "macroArea": "general",
+      "task_id": "2-requirements-txt"
+    },
+    {
+      "description": "Create the `app/extensions.py` file to instantiate Flask extensions, preventing circular import issues.",
+      "macroArea": "general",
+      "task_id": "3-app-extensions-py"
+    },
+    {
+      "description": "Define all SQLAlchemy ORM models in `app/classes/models.py` to map Python classes to database tables.",
+      "macroArea": "class",
+      "task_id": "4-app-classes-models-py"
+    },
+    {
+      "description": "Create the `app/functions/helpers.py` file to house reusable utility functions for tasks like slug generation and file handling.",
+      "macroArea": "functions",
+      "task_id": "5-app-functions-helpers-py"
+    },
+    {
+      "description": "Create the `app/api/public_routes.py` file to define all publicly accessible API endpoints that do not require authentication.",
+      "macroArea": "api_restfull",
+      "task_id": "6-app-api-public-routes-py"
+    },
+    {
+      "description": "Create the `app/api/auth_routes.py` file to handle the authentication logic, specifically the administrator login.",
+      "macroArea": "api_restfull",
+      "task_id": "7-app-api-auth-routes-py"
+    },
+    {
+      "description": "Create the `app/api/admin_routes.py` file to define all administrative endpoints, protected by JWT authentication, for content management.",
+      "macroArea": "api_restfull",
+      "task_id": "8-app-api-admin-routes-py"
+    },
+    {
+      "description": "Implement the Application Factory pattern in `app/__init__.py` to initialize and configure the Flask application.",
+      "macroArea": "general",
+      "task_id": "9-app-init-py"
+    },
+    {
+      "description": "Create the main entry point `run.py` to start the Flask application server.",
+      "macroArea": "general",
+      "task_id": "10-run-py"
+    },
+    {
+      "description": "Create empty `__init__.py` files in the `api`, `classes`, and `functions` directories to ensure they are treated as Python packages.",
+      "macroArea": "general",
+      "task_id": "11-package-init-files"
+    }
+  ]
+}
+[Task Frontend]
+Task per il frontend elaborate
+{
+  "tasks": [
+    {
+      "description": "A reusable, highly-customizable button component. It should support different states (default, hover, active, disabled) and styles (primary, secondary, danger). It must be fully accessible, using a `<button>` element and supporting ARIA attributes. The button should accept an `onClick` handler, children for the label, and optional props for an icon.",
+      "macroArea": "componente",
+      "struttura": "The component is a single button element. Padding should be generous for easy clicking (e.g., py-2 px-4). The primary style will have a background color of `primary` (`#3B82F6`) and white text. The secondary style will have a transparent background with a border of color `accent` (`#F3F4F6`). The hover state should slightly darken or lighten the background color. The disabled state should have a muted gray color and a `not-allowed` cursor. An optional icon can be placed to the left or right of the text label with appropriate spacing.",
+      "task_id": "ButtonComponent"
+    },
+    {
+      "description": "An accessible, reusable input field component with a label and optional error message display. It should handle standard input types like 'text', 'email', 'password'. It needs to support different visual states: default, focused, and error. It will be used throughout the admin forms.",
+      "macroArea": "componente",
+      "struttura": "The component consists of a `div` wrapper. Inside, a `<label>` element is positioned above a styled `<input>` element. The input has a border of color `accent`, a white background, and `text` color for the text. On focus, the border color changes to `primary`. Below the input, an optional `<p>` tag with a red color is displayed to show validation errors. The entire component should have a vertical layout with spacing between the label, input, and error message.",
+      "task_id": "InputFieldComponent"
+    },
+    {
+      "description": "A reusable textarea component for multi-line text input, similar to the InputFieldComponent. It will include a label, the textarea element itself, and a space for an error message. This will be used for longer text fields like project descriptions or excerpts.",
+      "macroArea": "componente",
+      "struttura": "This component has a structure identical to the InputFieldComponent but uses a `<textarea>` instead of an `<input>`. The textarea should be resizable vertically by default. It will share the same styling for default, focus, and error states (border colors, label position, error text styling).",
+      "task_id": "TextareaFieldComponent"
+    },
+    {
+      "description": "A simple, centered spinner or loading indicator component. It should be used to provide visual feedback to the user during asynchronous operations like data fetching. The animation should be smooth and unobtrusive.",
+      "macroArea": "componente",
+      "struttura": "The component will be a single `div` element centered within its parent container. It will be a visually simple animated spinner, for example, a rotating circle or a series of pulsing dots, using the `primary` theme color. The size should be configurable via props.",
+      "task_id": "SpinnerComponent"
+    },
+    {
+      "description": "A reusable modal component for displaying confirmations, forms, or additional information in a dialog overlay. It should include a title, content area, and action buttons (e.g., 'Confirm', 'Cancel'). It must be accessible, trapping focus within the modal and allowing closure via an 'X' button or the Escape key.",
+      "macroArea": "componente",
+      "struttura": "The modal consists of a semi-transparent full-screen overlay (e.g., `bg-black/50`). Centered on top of the overlay is the modal container, a white card with rounded corners and a shadow. The container has a header section with a title (`<h2>`) on the left and a close icon-button on the right. Below the header is a content area, and at the bottom is a footer with action buttons, typically aligned to the right.",
+      "task_id": "ModalComponent"
+    },
+    {
+      "description": "The main navigation bar for public pages. It should be fully responsive and provide clear links to the Home, About, Projects, and Articles pages. It will have a clean, modern design consistent with the site's aesthetic.",
+      "macroArea": "componente",
+      "struttura": "A full-width header element with a white background (`background`) and a subtle bottom border (`accent`). On larger screens (md and up), it displays a logo or name on the left and a horizontal list of navigation links on the right. Active links should be visually distinct (e.g., underlined or in `primary` color). On smaller screens, the links collapse into a hamburger menu icon. Tapping the icon reveals the links in a vertical drawer or dropdown menu.",
+      "task_id": "NavbarComponent"
+    },
+    {
+      "description": "The footer for all public pages. It should contain copyright information and links to professional/social media profiles such as GitHub, LinkedIn, or Twitter in the form of icons.",
+      "macroArea": "componente",
+      "struttura": "A full-width footer element with a light gray background (`accent`). The content is centered and includes a single line of text for copyright (e.g., '&copy; 2024 Your Name'). Below or next to the text, there is a horizontal row of social media icons. The icons should have a hover effect, changing color to `primary`.",
+      "task_id": "FooterComponent"
+    },
+    {
+      "description": "A card component to display a summary of a single article. It will be used on the main Articles page and the Homepage. Clicking the card should navigate to the detailed article page. It should display the article's title, publication date, tags, and a short excerpt.",
+      "macroArea": "componente",
+      "struttura": "The component is a container with a subtle shadow and rounded corners, with a light gray (`accent`) background. Inside, an `<h3>` holds the article title. Below the title, a small, grayed-out text element shows the publication date. Below that, a `<p>` tag contains the article excerpt. At the bottom, a list of small, pill-shaped tags is displayed, each with a light background and text in the `primary` color. The entire card has a hover effect (e.g., the shadow increases slightly).",
+      "task_id": "ArticleCardComponent"
+    },
+    {
+      "description": "A card component to display a summary of a single project. Used on the main Projects page and the Homepage. Clicking it navigates to the detailed project page. It must display the project's title, a thumbnail image, and a short description.",
+      "macroArea": "componente",
+      "struttura": "A container card with rounded corners and a border of color `accent`. The top section of the card contains a thumbnail image with an aspect ratio of 16:9. Below the image, there is padding, followed by an `<h3>` for the project title and a `<p>` for a brief description. The entire card is a clickable link. On hover, a subtle overlay could appear on the image or the border color could change to `primary`.",
+      "task_id": "ProjectCardComponent"
+    },
+    {
+      "description": "A component that takes a Markdown string as a prop and safely renders it into styled HTML. This is critical for displaying the body of articles and project descriptions. It should apply styles for headers, paragraphs, lists, code blocks, and links.",
+      "macroArea": "componente",
+      "struttura": "This is a wrapper around a library like `react-markdown`. It doesn't have its own visible container but styles the generated HTML elements. Headings (`h1`, `h2`, etc.) should be bold with decreasing font sizes. Paragraphs (`<p>`) have standard text color and line height for readability. Code blocks (`<pre><code>`) have a distinct background color (`accent`), a monospaced font, and padding. Links (`<a>`) are colored `primary` and underlined on hover.",
+      "task_id": "MarkdownRendererComponent"
+    },
+    {
+      "description": "A vertical sidebar for navigation within the admin section. It provides links to the Dashboard, Projects management, Articles management, and Settings pages. The current page's link should be highlighted.",
+      "macroArea": "componente",
+      "struttura": "A fixed-position sidebar on the left side of the screen. It has a dark background color (`text`). At the top, it displays a site logo or name. Below, it contains a vertical list of navigation links. Each link is composed of an icon and a text label. The active link has a different background color (e.g., `primary`) to indicate the current page. The sidebar should be responsive, potentially collapsing to show only icons on smaller screens.",
+      "task_id": "AdminSidebarComponent"
+    },
+    {
+      "description": "A component for handling file selection and upload, specifically for images. It will be used in the project and article creation/editing forms. It should show a preview of the selected image and handle the upload state (progress, success, error).",
+      "macroArea": "componente",
+      "struttura": "A dashed border `div` that acts as a drop zone or a click-to-select area. It contains text like 'Drag & drop an image or click to select'. When an image is selected, the text is replaced by a preview of the image. A progress bar or a spinner is shown during upload. An 'X' icon on the preview allows the user to remove the selected image.",
+      "task_id": "ImageUploaderComponent"
+    },
+    {
+      "description": "A rich text editor specialized for writing Markdown. This client component will be the primary tool for creating and editing articles. It should provide toolbar buttons for common Markdown syntax (bold, italic, links, lists, code blocks) and a live preview pane.",
+      "macroArea": "componente",
+      "struttura": "This component will wrap a library like `react-mde` or `easymde-react`. It will feature a split-pane view: a text area for writing on one side and a rendered HTML preview on the other. A toolbar with icons for formatting options sits at the top. The component's styling should be customized to match the admin panel's aesthetic (e.g., colors, fonts).",
+      "task_id": "MarkdownEditorComponent"
+    },
+    {
+      "description": "A React Context Provider to manage and distribute the authentication state (JWT, login status) throughout the application, especially for the admin section. It will expose functions for login and logout.",
+      "macroArea": "componente",
+      "struttura": "This is a non-visual component that wraps the root application layout or the admin layout. It doesn't render any UI itself but uses React's Context API to provide its value (auth state and functions) to all children components. It will handle storing the JWT in `localStorage` or memory.",
+      "task_id": "AuthContextComponent"
+    },
+    {
+      "description": "The main layout component for all public-facing pages. It provides a consistent structure by including the Navbar at the top and the Footer at the bottom, with the main page content rendered in between.",
+      "macroArea": "componente",
+      "struttura": "A flex container with a a vertical direction (`flex-col`) that takes up the full viewport height (`min-h-screen`). It renders the `NavbarComponent` at the top, a `<main>` element that grows to fill the available space (`flex-grow`), and the `FooterComponent` at the bottom. The page content passed as children will be rendered inside the `<main>` tag.",
+      "task_id": "PublicLayoutComponent"
+    },
+    {
+      "description": "The main layout for all authenticated admin pages. It ensures a consistent structure with a sidebar for navigation and a main content area. It also acts as the primary protected route boundary.",
+      "macroArea": "componente",
+      "struttura": "A flex container for the entire screen. It renders the `AdminSidebarComponent` on the left (fixed width). The remaining space is taken up by a main content area with a light gray background (`accent`). This area has padding and will render the specific admin page (e.g., Dashboard, Projects table). This component uses the `AuthContext` to check for an authenticated user and redirects to `/admin/login` if none is found.",
+      "task_id": "AdminLayoutComponent"
+    },
+    {
+      "description": "The homepage of the application. It serves as a landing page, providing a brief professional introduction, a section for the most recent articles, and a section for featured projects. This page is statically generated for performance.",
+      "macroArea": "pagina",
+      "struttura": "The page uses a vertical layout. At the top, a full-width hero section with a title (e.g., 'Welcome, I'm [Name]'), a subtitle (e.g., 'Machine Learning Engineer & Developer'), and a short bio. Below the hero section, an `<h2>` introduces 'Recent Articles', followed by a responsive grid (1-3 columns) of `ArticleCardComponent` instances. Further down, another `<h2>` introduces 'Featured Projects', followed by a grid of `ProjectCardComponent` instances. The entire page is wrapped in the `PublicLayoutComponent`.",
+      "task_id": "HomePage"
+    },
+    {
+      "description": "A dedicated page displaying the administrator's 'About Me' content. The text is fetched from the API and rendered. It should provide a detailed professional background.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `PublicLayoutComponent`, the page has a main container with a maximum width and centered. It features a main title `<h1>About Me</h1>`. Below the title, the content fetched from the API is rendered using the `MarkdownRendererComponent` to allow for rich text formatting defined by the admin.",
+      "task_id": "AboutPage"
+    },
+    {
+      "description": "A gallery page that displays all projects in a grid or list format. Each project is represented by a `ProjectCardComponent`. This page is statically generated.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `PublicLayoutComponent`. Contains a main title, `<h1>Projects</h1>`. Below the title, a responsive grid (e.g., 1 column on mobile, 2-3 on desktop) displays multiple `ProjectCardComponent` instances. A message 'No projects found.' is shown if the API returns an empty list.",
+      "task_id": "ProjectsPage"
+    },
+    {
+      "description": "The detailed view for a single project. It displays the project's full description, a gallery of images, and links to external resources like GitHub or a live demo. This page is generated for each project slug.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in `PublicLayoutComponent`. At the top, the project title is displayed as an `<h1>`. Below the title is an image gallery, which could be a carousel or a grid of images. Below the gallery, there is a section for external links, displayed as a list of `ButtonComponent` instances with labels like 'GitHub' and 'Live Demo'. The main content, the project's detailed description, is rendered below using the `MarkdownRendererComponent`.",
+      "task_id": "ProjectDetailPage"
+    },
+    {
+      "description": "A page that lists all articles, ordered chronologically with the newest first. It uses the `ArticleCardComponent` for each entry and supports pagination if the list becomes long.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in `PublicLayoutComponent`. Contains a main title, `<h1>Articles</h1>`. Below the title, a vertical stack of `ArticleCardComponent` instances is displayed. If pagination is implemented, 'Previous' and 'Next' page buttons will be at the bottom. A message 'No articles available.' is shown if the API returns an empty list.",
+      "task_id": "ArticlesPage"
+    },
+    {
+      "description": "The page for displaying a single, full article. It renders the article's title, publication date, tags, and the main content from Markdown.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in `PublicLayoutComponent` within a centered, max-width container for readability. The top features the article `<h1>` title, followed by metadata (publication date and tags). The main body of the article is rendered below using the `MarkdownRendererComponent`. The typography should be optimized for long-form reading (e.g., proper line height, font size).",
+      "task_id": "ArticleDetailPage"
+    },
+    {
+      "description": "A simple, clean login page for the administrator. It contains a form with fields for username and password, and a login button. It must handle and display authentication errors.",
+      "macroArea": "pagina",
+      "struttura": "A centered layout on a plain background (`accent` or white). A card in the middle of the screen contains the login form. The card has a title `<h2>Admin Login</h2>`. Inside, there are two `InputFieldComponent` instances for 'Username' and 'Password', and a primary `ButtonComponent` for 'Login'. An error message area is present below the button to display 'Invalid credentials' or other messages from the API.",
+      "task_id": "AdminLoginPage"
+    },
+    {
+      "description": "The central hub for the admin panel. It provides a welcome message and quick links or summary statistics (e.g., number of articles, number of projects) to the different content management sections.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `AdminLayoutComponent`. The main content area displays a title `<h1>Dashboard</h1>`. Below the title, a series of summary cards or 'stat cards' are displayed in a row. Each card could show a number (e.g., '15 Articles') and a link ('Manage Articles'). This provides a quick overview and easy navigation.",
+      "task_id": "AdminDashboardPage"
+    },
+    {
+      "description": "An admin page for managing all projects (Create, Read, Update, Delete). It displays projects in a table and provides controls for CRUD operations.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `AdminLayoutComponent`. A header section has a title `<h1>Manage Projects</h1>` and a 'Create New Project' `ButtonComponent`. Below this is a table listing all projects. Table columns include 'Title', 'Date Created', and 'Actions'. The 'Actions' column contains 'Edit' and 'Delete' buttons for each project. Clicking 'Create' or 'Edit' opens a `ModalComponent` containing a form with fields for title, description, links, and the `ImageUploaderComponent`.",
+      "task_id": "AdminProjectsPage"
+    },
+    {
+      "description": "An admin page for managing all articles (Create, Read, Update, Delete). It features a table of articles and integrates the Markdown editor for creation and editing.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `AdminLayoutComponent`. A header contains the title `<h1>Manage Articles</h1>` and a 'Create New Article' button. Below is a table of articles with columns for 'Title', 'Status' (e.g., Published), 'Date Created', and 'Actions' (Edit, Delete). Clicking 'Create' or 'Edit' navigates to a separate full-page form. This form page has an `InputFieldComponent` for the title, a field for tags, and the `MarkdownEditorComponent` for the content. Save/Update buttons are at the bottom.",
+      "task_id": "AdminArticlesPage"
+    },
+    {
+      "description": "An admin settings page where the administrator can update sitewide content, specifically the 'About Me' page text.",
+      "macroArea": "pagina",
+      "struttura": "Wrapped in the `AdminLayoutComponent`. The page has a title `<h1>Site Settings</h1>`. It contains a simple form with a section titled 'Update About Me Page'. This section has a `TextareaFieldComponent` pre-filled with the current 'About Me' content and a 'Save Changes' `ButtonComponent` underneath.",
+      "task_id": "AdminSettingsPage"
+    },
+    {
+      "description": "Define all necessary frontend dependencies in the `package.json` file. This includes the core framework (Next.js, React), styling (Tailwind CSS), data fetching libraries (SWR or React Query), form handling, and any component-specific libraries.",
+      "macroArea": "componente",
+      "struttura": "This is not a visual component. The task is to list the npm packages required for the project. The list should include: `next`, `react`, `react-dom`, `tailwindcss`, `autoprefixer`, `postcss`. Also include `axios` for API calls, `swr` or `@tanstack/react-query` for client-side data fetching, `react-markdown` for rendering markdown, a library for the markdown editor like `react-mde`, and an icon library like `react-icons`.",
+      "task_id": "requirements.txt"
+    }
+  ]
+}
