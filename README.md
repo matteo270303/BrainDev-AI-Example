@@ -25,7 +25,6 @@ The goal of this repository is to:
 - **Large Language Model:** Gemini 2.5 Pro  
 - **Framework:** BrainDev AI  
 - **Methodology:** Extended Self-Planning  
-- **Human Intervention:** None 
 
 All outputs were generated in a single run of the framework.
 
@@ -41,13 +40,9 @@ Each file represents the **direct output of one pipeline stage**, in the exact o
 
 ## 4. Evaluation Context
 
-The artifacts in this repository are used as input for the evaluation methodology described in the associated paper (Structural and Functional Coherence Evaluation).
+The artifacts in this repository are used as input for the evaluation methodology described in the associated paper (Structural and Functional Coherence Evaluation SFCEval).
 
 In the file SFCEval.txt are shown all the specifics
 
----
 
-## 5. Citation
-
-If you use or reference this repository in academic work, please cite the associated paper:
 
